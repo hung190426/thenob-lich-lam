@@ -874,7 +874,7 @@ function isWeekLocked() {
   const key = getWeekKey();
   const sched = allSchedules[key];
   if (!sched) return false;
-  // Kiểm tra có ít nhất 1 ca được điền
+  // Kiểm tra có ��t nhất 1 ca được điền
   return sched.some(row => row && row.some(cell => cell && cellType(cell) !== 'off'));
 }
 
@@ -1260,7 +1260,7 @@ function calcHoursFromStr(s, e) {
   return Math.max(0, Math.round(diff / 60 * 10) / 10);
 }
 
-// Tính số tuần ISO cho ngày bất kỳ
+// T��nh số tuần ISO cho ngày bất kỳ
 function getISOWeekKey(date) {
   const d = new Date(date);
   const day = d.getDay() || 7;
@@ -1434,5 +1434,12 @@ document.addEventListener('DOMContentLoaded', () => {
   connectFirebase(FB_URL);
 });
 </script>
+
+<!-- Vercel Speed Insights -->
+<script type="module">
+  import { injectSpeedInsights } from './_vercel/speed-insights.js';
+  injectSpeedInsights();
+</script>
+
 </body>
 </html>

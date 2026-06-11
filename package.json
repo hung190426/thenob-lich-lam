@@ -1,0 +1,20 @@
+{
+  "name": "thenob-lich-lam",
+  "version": "1.0.0",
+  "description": "The Nob — Lịch làm việc",
+  "type": "module",
+  "scripts": {
+    "build": "echo 'Static HTML project - no build required'",
+    "dev": "npx serve .",
+    "lint": "echo 'No linting configured for static HTML project'"
+  },
+  "keywords": ["schedule", "calendar", "work"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  },
+  "dependencies": {
+    "@vercel/speed-insights": "^1.0.12"
+  }
+}
