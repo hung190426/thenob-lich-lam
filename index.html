@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>The Nob — Lịch làm việc</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1117;--bg2:#161b27;--bg3:#1e2535;--bg4:#252d3d;--bg5:#2d3650;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#e8ecf4;--muted:#7a8499;--muted2:#4a5368;
+  --green:#00c896;--green-bg:rgba(0,200,150,0.12);--green-bd:rgba(0,200,150,0.3);
+  --blue:#4d9fff;--blue-bg:rgba(77,159,255,0.12);--blue-bd:rgba(77,159,255,0.3);
+  --purple:#a78bfa;--purple-bg:rgba(167,139,250,0.12);--purple-bd:rgba(167,139,250,0.3);
+  --red:#ff6b6b;--red-bg:rgba(255,107,107,0.12);--red-bd:rgba(255,107,107,0.3);
+  --warn:#f0a832;--warn-bg:rgba(240,168,50,0.12);
+  --r:10px;--r2:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;overflow-x:hidden}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:99px}
+
+/* LOGIN */
+.login-wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:16px;background:var(--bg)}
+.login-box{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:28px 24px;width:100%;max-width:360px}
+.login-logo{text-align:center;margin-bottom:18px}
+.login-logo-icon{width:44px;height:44px;border-radius:14px;background:var(--green-bg);border:1px solid var(--green-bd);display:inline-flex;align-items:center;justify-content:center;margin-bottom:8px}
+.login-logo-icon svg{stroke:var(--green);width:22px;height:22px;fill:none;stroke-width:2}
+.login-title{font-size:20px;font-weight:600;letter-spacing:-0.5px}
+.login-title span{color:var(--green)}
+.login-tabs{display:flex;gap:4px;background:var(--bg3);border-radius:10px;padding:3px;margin-bottom:16px}
+.ltab{flex:1;padding:8px;border-radius:8px;border:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted)}
+.ltab.emp-on{background:var(--green-bg);color:var(--green)}
+.ltab.adm-on{background:var(--purple-bg);color:var(--purple)}
+.lfield{margin-bottom:12px}
+.llabel{font-size:12px;color:var(--muted);margin-bottom:5px;font-weight:500}
+.linput{width:100%;background:var(--bg3);border:1.5px solid var(--border2);border-radius:9px;padding:10px 13px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.linput:focus{border-color:var(--green-bd)}
+select.linput{cursor:pointer}
+.lbtn{width:100%;padding:11px;border-radius:10px;border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:4px}
+.lbtn.emp-btn{background:var(--green-bg);color:var(--green);border:1.5px solid var(--green-bd)}
+.lbtn.adm-btn{background:var(--purple-bg);color:var(--purple);border:1.5px solid var(--purple-bd)}
+.lerr{font-size:12px;color:var(--red);text-align:center;margin-top:8px;min-height:16px}
+.sync-status-login{display:flex;align-items:center;gap:6px;justify-content:center;font-size:11px;color:var(--muted);margin-top:12px}
+
+/* SETUP */
+.setup-wrap{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px;z-index:999}
+.setup-box{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:24px;width:100%;max-width:420px}
+.setup-title{font-size:15px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.setup-sub{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.7}
+.setup-sub code{background:var(--bg3);padding:2px 6px;border-radius:4px;font-size:11px;font-family:'DM Mono',monospace}
+.setup-input{width:100%;background:var(--bg3);border:1.5px solid var(--border2);border-radius:9px;padding:10px 13px;color:var(--text);font-size:13px;font-family:'DM Mono',monospace;outline:none;margin-bottom:10px;-webkit-appearance:none;transition:border-color .2s}
+.setup-input:focus{border-color:var(--blue-bd)}
+.setup-btns{display:flex;gap:8px}
+.sbtn{flex:1;padding:10px;border-radius:9px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.sbtn.primary{background:var(--blue-bg);color:var(--blue);border:1.5px solid var(--blue-bd)}
+.sbtn.sec{background:var(--bg3);color:var(--muted);border:1.5px solid var(--border2)}
+.setup-err{font-size:12px;color:var(--red);margin-top:8px;min-height:16px;line-height:1.5}
+
+/* SHELL */
+.shell{display:grid;grid-template-columns:210px 1fr;min-height:100vh}
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.main{display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 18px;height:54px;display:flex;align-items:center;gap:10px;flex-shrink:0;position:sticky;top:0;z-index:50}
+.content{flex:1;padding:18px;overflow-y:auto;padding-bottom:80px}
+
+/* SIDEBAR */
+.sb-head{padding:16px 14px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.sb-icon{width:28px;height:28px;border-radius:8px;background:var(--green-bg);border:1px solid var(--green-bd);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-icon svg{stroke:var(--green);width:14px;height:14px;fill:none;stroke-width:2}
+.sb-logo-text{font-size:14px;font-weight:600;letter-spacing:-0.4px}
+.sb-logo-text span{color:var(--green)}
+.sb-nav{padding:8px 6px;flex:1;overflow-y:auto}
+.sb-item{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:9px;cursor:pointer;color:var(--muted);font-size:13px;font-weight:400;transition:all .15s;margin-bottom:1px;border:1px solid transparent;user-select:none}
+.sb-item:hover{background:var(--bg3);color:var(--text)}
+.sb-item.active{background:var(--green-bg);color:var(--green);border-color:rgba(0,200,150,0.2);font-weight:500}
+.sb-item svg{width:15px;height:15px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:2}
+.sb-foot{padding:12px;border-top:1px solid var(--border)}
+.sb-user{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.sb-logout{margin-left:auto;background:transparent;border:none;color:var(--muted2);cursor:pointer;padding:6px;border-radius:7px;transition:all .15s;display:flex}
+.sb-logout:hover{color:var(--red);background:var(--red-bg)}
+.avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.sync-row{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted);padding:7px 8px;border-radius:8px;cursor:pointer;transition:all .15s;border:1px solid var(--border)}
+.sync-row:hover{background:var(--bg3)}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--muted2);flex-shrink:0;transition:background .3s}
+.sync-dot.ok{background:var(--green)}
+.sync-dot.err{background:var(--red)}
+.sync-dot.spin{background:var(--warn);animation:blink .8s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* TOPBAR */
+.tb-title{font-size:14px;font-weight:600;flex:1}
+.week-nav{display:flex;align-items:center;gap:5px}
+.wlabel{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;min-width:90px;text-align:center}
+.tbtn{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:5px 9px;color:var(--muted);font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap;border:none}
+.tbtn:hover{background:var(--bg4);color:var(--text)}
+.tbtn.primary{background:var(--green-bg);border:1px solid var(--green-bd);color:var(--green)}
+.tbtn.primary:hover{background:rgba(0,200,150,0.2)}
+
+/* MOB HEADER */
+.mob-header{display:none;background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 14px;position:sticky;top:0;z-index:50;align-items:center;gap:10px}
+.mh-title{font-size:15px;font-weight:600;flex:1}
+.mh-sync{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);cursor:pointer}
+
+/* MOB NAV */
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:100;padding:6px 4px calc(6px + env(safe-area-inset-bottom));gap:2px}
+.mn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 4px;border-radius:9px;cursor:pointer;color:var(--muted);font-size:10px;font-weight:500;transition:all .2s;border:none;background:transparent;font-family:'DM Sans',sans-serif;user-select:none}
+.mn-item svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2}
+.mn-item.active{color:var(--green)}
+
+/* CARD */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px;margin-bottom:14px}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap}
+.card-title{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+.card-title svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* SCHEDULE TABLE */
+.sched-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.sched-table{width:100%;border-collapse:collapse;min-width:520px}
+.sched-table th{font-size:11px;color:var(--muted);font-weight:500;padding:0 6px 10px;text-align:center;border-bottom:1px solid var(--border)}
+.sched-table th.today-h{color:var(--green)}
+.sched-table td{padding:6px 5px;border-bottom:1px solid var(--border);text-align:center;vertical-align:middle}
+.sched-table tr:last-child td{border-bottom:none}
+.sched-table td:first-child{text-align:left;padding-left:0}
+.sched-table tr:hover td{background:var(--bg3)}
+.emp-name-cell{display:flex;align-items:center;gap:7px}
+.shift-pill{display:inline-block;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap}
+.shift-pill:hover{filter:brightness(1.2)}
+.sp-m{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
+.sp-a{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd)}
+.sp-f{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-bd)}
+.sp-ot{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
+.add-cell{color:var(--muted2);font-size:20px;cursor:pointer;line-height:1;display:inline-block;width:28px;height:28px;border-radius:6px;transition:all .15s;display:inline-flex;align-items:center;justify-content:center}
+.add-cell:hover{background:var(--bg4);color:var(--text)}
+
+/* LEGEND */
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.leg-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
+
+/* MOBILE SCHED */
+.mob-sched{display:flex;flex-direction:column;gap:8px}
+.mob-day{background:var(--bg3);border-radius:var(--r);overflow:hidden;border:1px solid var(--border)}
+.mob-day-head{display:flex;align-items:center;padding:9px 12px;border-bottom:1px solid var(--border);gap:8px}
+.mob-day-head.today .mob-day-name{color:var(--green)}
+.mob-day-name{font-size:13px;font-weight:600;flex:1}
+.mob-day-date{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace}
+.mob-day-body{padding:8px 10px;display:flex;flex-direction:column;gap:5px}
+.mob-emp-row{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;background:var(--bg2)}
+.mob-empty{text-align:center;padding:12px;color:var(--muted2);font-size:12px}
+.mob-add{text-align:center;padding:7px;color:var(--muted2);font-size:12px;cursor:pointer;border-top:1px solid var(--border);transition:all .15s}
+.mob-add:hover{background:var(--bg4);color:var(--text)}
+
+/* EMP LIST */
+.emp-list{display:flex;flex-direction:column;gap:6px}
+.emp-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg3)}
+.emp-row-info{flex:1;min-width:0}
+.emp-row-name{font-size:13px;font-weight:500}
+.emp-row-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.act-btns{display:flex;gap:5px}
+.act-btn{padding:5px 11px;border-radius:7px;border:none;font-size:11px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.act-edit{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd)}
+.act-del{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
+
+/* MODALS */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);z-index:200;display:none;align-items:flex-end;justify-content:center;padding:0}
+@media(min-width:600px){.modal-overlay{align-items:center;padding:16px}}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:20px 20px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom));width:100%;max-width:420px;animation:slideUp .28s cubic-bezier(.16,1,.3,1)}
+@media(min-width:600px){.modal{border-radius:16px;padding:22px}}
+@keyframes slideUp{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-handle{width:36px;height:4px;border-radius:99px;background:var(--bg5);margin:0 auto 16px}
+@media(min-width:600px){.modal-handle{display:none}}
+.modal h3{font-size:15px;font-weight:600;margin-bottom:16px}
+.mfield{margin-bottom:12px}
+.mlabel{font-size:12px;color:var(--muted);margin-bottom:5px;font-weight:500}
+.minput{width:100%;background:var(--bg3);border:1.5px solid var(--border2);border-radius:9px;padding:10px 12px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.minput:focus{border-color:var(--green-bd)}
+select.minput{cursor:pointer}
+.shift-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.sopt{padding:10px 12px;border-radius:9px;border:1.5px solid var(--border2);background:transparent;color:var(--muted);font-size:12px;cursor:pointer;text-align:left;font-family:'DM Sans',sans-serif;transition:all .15s}
+.sopt:hover{background:var(--bg3);color:var(--text)}
+.sopt.s-m{background:var(--green-bg);border-color:var(--green-bd);color:var(--green)}
+.sopt.s-a{background:var(--blue-bg);border-color:var(--blue-bd);color:var(--blue)}
+.sopt.s-f{background:var(--purple-bg);border-color:var(--purple-bd);color:var(--purple)}
+.sopt.s-ot{background:var(--red-bg);border-color:var(--red-bd);color:var(--red)}
+.sopt.s-off{background:var(--bg3);border-color:var(--border2);color:var(--text)}
+.sopt-name{font-weight:600;margin-bottom:2px}
+.sopt-time{font-size:10px;opacity:.65;font-family:'DM Mono',monospace}
+.pill-time{font-size:9px;opacity:.75;font-family:'DM Mono',monospace;margin-left:3px;font-weight:400}
+.time-inputs{display:flex;gap:8px;margin-top:10px;padding:10px 12px;background:var(--bg3);border-radius:9px;border:1.5px solid var(--border2)}
+.modal-actions{display:flex;gap:8px;margin-top:16px}
+.btn-cancel{flex:1;padding:10px;border-radius:9px;border:1.5px solid var(--border2);background:transparent;color:var(--muted);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-submit{flex:2;padding:10px;border-radius:9px;border:1.5px solid var(--green-bd);background:var(--green-bg);color:var(--green);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-del{flex:2;padding:10px;border-radius:9px;border:1.5px solid var(--red-bd);background:var(--red-bg);color:var(--red);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.confirm-box{background:var(--bg2);border:1px solid var(--border2);border-radius:20px 20px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom));width:100%;max-width:380px;animation:slideUp .28s cubic-bezier(.16,1,.3,1)}
+@media(min-width:600px){.confirm-box{border-radius:16px;padding:22px}}
+.confirm-box p{font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--bg4);border:1px solid var(--border2);border-radius:10px;padding:9px 16px;font-size:13px;display:flex;align-items:center;gap:7px;opacity:0;transition:all .25s;z-index:999;white-space:nowrap;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(min-width:768px){.toast{bottom:24px}}
+
+/* MONTHLY STATS */
+.month-nav{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.month-sel{background:var(--bg3);border:1.5px solid var(--border2);border-radius:9px;padding:8px 12px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer;-webkit-appearance:none;transition:border-color .2s}
+.month-sel:focus{border-color:var(--purple-bd)}
+.stats-grid{display:flex;flex-direction:column;gap:10px}
+.stat-emp-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.stat-emp-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border)}
+.stat-emp-name{font-size:13px;font-weight:600;flex:1}
+.stat-total-badge{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-bd);border-radius:7px;padding:3px 10px;font-size:12px;font-weight:600;font-family:'DM Mono',monospace}
+.stat-breakdown{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.stat-item{padding:10px 14px;border-right:1px solid var(--border);text-align:center}
+.stat-item:last-child{border-right:none}
+.stat-item-val{font-size:15px;font-weight:600;font-family:'DM Mono',monospace;margin-bottom:2px}
+.stat-item-label{font-size:10px;color:var(--muted);font-weight:500}
+.stat-summary-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:14px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.stat-sum-item{text-align:center;flex:1;min-width:80px}
+.stat-sum-val{font-size:22px;font-weight:700;font-family:'DM Mono',monospace;color:var(--purple)}
+.stat-sum-label{font-size:11px;color:var(--muted);margin-top:2px}
+.admin-only-badge{display:inline-flex;align-items:center;gap:5px;background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-bd);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:600;margin-left:6px}
+.stat-no-data{text-align:center;padding:28px;color:var(--muted2);font-size:12px}
+.stat-emp-detail{padding:10px 14px;display:flex;flex-direction:column;gap:4px}
+.stat-day-row{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid var(--border)}
+.stat-day-row:last-child{border-bottom:none}
+.stat-expand-btn{background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;padding:6px 14px;width:100%;text-align:center;font-family:'DM Sans',sans-serif;border-top:1px solid var(--border);transition:all .15s}
+.stat-expand-btn:hover{background:var(--bg4);color:var(--text)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .mob-header{display:flex}
+  .mob-nav{display:flex}
+  .content{padding:12px;padding-bottom:80px}
+  .topbar{display:none}
+  .stat-breakdown{grid-template-columns:repeat(2,1fr)}
+  .stat-item:nth-child(2){border-right:none}
+  .stat-item:nth-child(1),.stat-item:nth-child(2){border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-logo-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <div class="login-title">The <span>Nob</span></div>
+    </div>
+    <div class="login-tabs">
+      <button class="ltab emp-on" id="tabEmp" onclick="switchTab('employee')">Nhân viên</button>
+      <button class="ltab" id="tabAdm" onclick="switchTab('admin')">Admin</button>
+    </div>
+    <div id="panelEmp">
+      <div class="lfield"><div class="llabel">Chọn tên của bạn</div>
+        <select class="linput" id="loginEmpSel"><option value="">-- Đang tải... --</option></select>
+      </div>
+      <button class="lbtn emp-btn" onclick="doLoginEmp()">Xem lịch làm</button>
+    </div>
+    <div id="panelAdm" style="display:none">
+      <div class="lfield"><div class="llabel">Mật khẩu Admin</div>
+        <input class="linput" type="password" id="loginPass" placeholder="Nhập mật khẩu">
+      </div>
+      <button class="lbtn adm-btn" onclick="doLoginAdmin()">Đăng nhập Admin</button>
+    </div>
+    <div class="lerr" id="loginErr"></div>
+    <div class="sync-status-login">
+      <div class="sync-dot" id="syncDotLogin"></div>
+      <span id="syncLabelLogin">Đang kết nối...</span>
+    </div>
+  </div>
+</div>
+
+<!-- FIREBASE SETUP -->
+<div class="setup-wrap" id="setupScreen" style="display:none">
+  <div class="setup-box">
+    <div class="setup-title">
+      <svg width="16" height="16" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+      Cài đặt đồng bộ đám mây
+    </div>
+    <div class="setup-sub">
+      Dán Firebase Realtime Database URL để đồng bộ lịch làm giữa tất cả thiết bị theo thời gian thực.<br><br>
+      <b>Cách lấy URL:</b> Firebase Console → Realtime Database → copy URL<br>
+      Dạng: <code>https://ten-project-default-rtdb.firebaseio.com</code><br><br>
+      <b>Đặt Rules:</b> <code>{"rules":{".read":true,".write":true}}</code>
+    </div>
+    <input class="setup-input" id="fbUrlInput" type="url" placeholder="https://your-project-default-rtdb.firebaseio.com">
+    <div class="setup-btns">
+      <button class="sbtn sec" onclick="skipSync()">Dùng offline</button>
+      <button class="sbtn primary" onclick="doConnectFirebase()">Kết nối</button>
+    </div>
+    <div class="setup-err" id="setupErr"></div>
+  </div>
+</div>
+
+<!-- APP SHELL -->
+<div class="shell" id="appShell" style="display:none">
+  <aside class="sidebar">
+    <div class="sb-head">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+      <div class="sb-logo-text">The <span>Nob</span></div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-item active" id="sb-schedule" onclick="showView('schedule')">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Lịch ca tuần
+      </div>
+      <div class="sb-item" id="sb-employees" onclick="showView('employees')">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Nhân viên
+      </div>
+      <div class="sb-item" id="sb-monthstats" onclick="showView('monthstats')" style="display:none">
+        <svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+        Thống kê tháng
+        <span class="admin-only-badge" style="margin-left:auto;margin-right:0">Admin</span>
+      </div>
+    </nav>
+    <div class="sb-foot">
+      <div class="sb-user">
+        <div class="avatar" id="sbAvatar"></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="sbName"></div>
+          <div style="font-size:10px;color:var(--muted)" id="sbRole"></div>
+        </div>
+        <button class="sb-logout" onclick="doLogout()" title="Đăng xuất">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+      <div class="sync-row" onclick="openSetup()">
+        <div class="sync-dot" id="syncDot"></div>
+        <span id="syncLabel" style="flex:1">Cục bộ</span>
+        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="opacity:.4"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <!-- Mobile header -->
+    <div class="mob-header" id="mobHeader">
+      <div class="mh-title" id="mobTitle">Lịch ca tuần</div>
+      <div class="mh-sync" onclick="openSetup()">
+        <div class="sync-dot" id="syncDotMob"></div>
+        <span id="syncLabelMob">Cục bộ</span>
+      </div>
+      <div class="avatar" id="mobAvatar" style="cursor:pointer;margin-left:6px" onclick="doLogout()"></div>
+    </div>
+
+    <!-- Desktop topbar -->
+    <div class="topbar">
+      <div class="tb-title" id="topTitle">Lịch ca tuần</div>
+      <div class="week-nav" id="topWeekNav">
+        <button class="tbtn" onclick="changeWeek(-1)">‹</button>
+        <span class="wlabel" id="weekLabel"></span>
+        <button class="tbtn" onclick="changeWeek(1)">›</button>
+      </div>
+      <button class="tbtn primary" id="topAddShift" onclick="openAddShift()" style="display:none">+ Thêm ca</button>
+      <button class="tbtn primary" id="topAddEmp" onclick="openAddEmp()" style="display:none">+ Thêm NV</button>
+    </div>
+
+    <div class="content">
+      <!-- SCHEDULE VIEW -->
+      <div id="view-schedule">
+        <!-- Mobile week nav -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px" id="mobWeekBar">
+          <div class="week-nav">
+            <button class="tbtn" onclick="changeWeek(-1)">‹</button>
+            <span class="wlabel" id="weekLabelMob"></span>
+            <button class="tbtn" onclick="changeWeek(1)">›</button>
+          </div>
+          <button class="tbtn primary" id="mobAddShift" onclick="openAddShift()" style="display:none">+ Thêm ca</button>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Lịch làm việc tuần này
+            </div>
+          </div>
+          <div class="sched-wrap" id="schedWrap"><table class="sched-table" id="schedTable"></table></div>
+          <div class="mob-sched" id="mobSched" style="display:none"></div>
+          <div class="legend">
+            <div class="leg"><div class="leg-dot" style="background:var(--green)"></div><span id="legendM">Ca sáng 9–13h</span></div>
+            <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div><span id="legendA">Ca chiều 13–18h</span></div>
+            <div class="leg"><div class="leg-dot" style="background:var(--purple)"></div>Full-time 9–18h</div>
+            <div class="leg"><div class="leg-dot" style="background:var(--red)"></div>Tăng ca</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EMPLOYEES VIEW -->
+      <div id="view-employees" style="display:none">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+              Danh sách nhân viên
+            </div>
+            <button class="tbtn primary" id="cardAddEmp" onclick="openAddEmp()" style="display:none">+ Thêm</button>
+          </div>
+          <div class="emp-list" id="empList"></div>
+        </div>
+      </div>
+
+      <!-- MONTHLY STATS VIEW (Admin only) -->
+      <div id="view-monthstats" style="display:none">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+              Thống kê giờ làm theo tháng
+              <span class="admin-only-badge">
+                <svg width="9" height="9" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                Chỉ Admin
+              </span>
+            </div>
+          </div>
+          <div class="month-nav">
+            <select class="month-sel" id="statMonthSel" onchange="buildMonthStats()"></select>
+            <select class="month-sel" id="statYearSel" onchange="buildMonthStats()"></select>
+          </div>
+          <!-- Summary row -->
+          <div class="stat-summary-card" id="statSummary"></div>
+          <!-- Per-employee cards -->
+          <div class="stats-grid" id="statsGrid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile bottom nav -->
+<nav class="mob-nav">
+  <button class="mn-item active" id="mn-schedule" onclick="showView('schedule')">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    Lịch ca
+  </button>
+  <button class="mn-item" id="mn-employees" onclick="showView('employees')">
+    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+    Nhân viên
+  </button>
+  <button class="mn-item" id="mn-monthstats" onclick="showView('monthstats')" style="display:none">
+    <svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+    Thống kê
+  </button>
+  <button class="mn-item" onclick="openSetup()">
+    <svg viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+    Đồng bộ
+  </button>
+</nav>
+
+<!-- MODAL: EMPLOYEE -->
+<div class="modal-overlay" id="empModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3 id="empModalTitle">Thêm nhân viên</h3>
+    <input type="hidden" id="editEmpIdx" value="-1">
+    <div class="mfield"><div class="mlabel">Họ và tên</div><input class="minput" type="text" id="empName" placeholder="Nguyễn Văn A"></div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('empModal')">Huỷ</button>
+      <button class="btn-submit" onclick="saveEmployee()">Lưu</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: SHIFT -->
+<div class="modal-overlay" id="shiftModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3 id="shiftModalTitle">Phân ca làm việc</h3>
+    <div class="mfield"><div class="mlabel">Nhân viên</div><select class="minput" id="shiftEmpSel"></select></div>
+    <div class="mfield"><div class="mlabel">Ngày trong tuần</div>
+      <select class="minput" id="shiftDaySel">
+        <option value="0">Thứ Hai</option><option value="1">Thứ Ba</option>
+        <option value="2">Thứ Tư</option><option value="3">Thứ Năm</option>
+        <option value="4">Thứ Sáu</option><option value="5">Thứ Bảy</option>
+        <option value="6">Chủ Nhật</option>
+      </select>
+    </div>
+    <div class="mfield">
+      <div class="mlabel">Ca làm</div>
+      <div class="shift-grid">
+        <button class="sopt" id="so-m" onclick="selShift('m')"><div class="sopt-name">☀️ Ca sáng</div><div class="sopt-time" id="st-m">09:00–13:00</div></button>
+        <button class="sopt" id="so-a" onclick="selShift('a')"><div class="sopt-name">🌇 Ca chiều</div><div class="sopt-time" id="st-a">13:00–18:00</div></button>        <button class="sopt" id="so-f" onclick="selShift('f')"><div class="sopt-name">💼 Full-time</div><div class="sopt-time">09:00–18:00</div></button>
+        <button class="sopt" id="so-ot" onclick="selShift('ot')"><div class="sopt-name">🔴 Tăng ca</div><div class="sopt-time">Ngoài giờ</div></button>
+        <button class="sopt" id="so-off" onclick="selShift('off')"><div class="sopt-name">🏖️ Nghỉ</div><div class="sopt-time">Xoá ca</div></button>
+      </div>
+      <!-- Tùy chỉnh giờ: chỉ hiện khi chọn ca sáng/chiều -->
+      <div id="timeInputPanel" style="display:none;margin-top:10px;background:var(--bg3);border-radius:9px;border:1.5px solid var(--border2);padding:12px">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:500">⏰ Tùy chỉnh giờ ca này</div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <div style="flex:1">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Bắt đầu</div>
+            <input type="time" id="timeStart" class="minput" style="width:100%;font-family:'DM Mono',monospace" oninput="updateShiftTimePreview()">
+          </div>
+          <div style="color:var(--muted2);margin-top:16px">→</div>
+          <div style="flex:1">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Kết thúc</div>
+            <input type="time" id="timeEnd" class="minput" style="width:100%;font-family:'DM Mono',monospace" oninput="updateShiftTimePreview()">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('shiftModal')">Huỷ</button>
+      <button class="btn-submit" onclick="saveShift()">Lưu lịch</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CONFIRM -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="confirm-box">
+    <div class="modal-handle"></div>
+    <h3 id="confirmTitle" style="font-size:15px;font-weight:600;margin-bottom:8px"></h3>
+    <p id="confirmText"></p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('confirmModal')">Huỷ</button>
+      <button class="btn-del" id="confirmOkBtn">Xác nhận</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span style="color:var(--green);font-size:15px">✓</span><span id="toastMsg"></span></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+// ==========================================
+// APP SCRIPT — chạy SAU KHI Firebase đã load
+// ==========================================
+
+const ADMIN_PASS  = 'admin123';
+const STORAGE_KEY = 'thenob_v2';
+const FB_URL_KEY  = 'thenob_fb_url';
+const FB_URL      = 'https://the-nob-lich-lam-viec-default-rtdb.asia-southeast1.firebasedatabase.app';
+
+const DAYS       = ['T2','T3','T4','T5','T6','T7','CN'];
+const DAY_NAMES  = ['Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy','Chủ Nhật'];
+const SL         = {m:'Ca sáng',a:'Ca chiều',f:'Full-time',ot:'Tăng ca',off:'Nghỉ'};
+const SC         = {m:'sp-m',a:'sp-a',f:'sp-f',ot:'sp-ot'};
+const COLORS     = ['green','blue','purple','red','warn'];
+
+// --- Giá trị mặc định giờ theo loại ca ---
+const DEFAULT_TIMES = {
+  m:  { start: '09:00', end: '13:00' },
+  a:  { start: '13:00', end: '18:00' },
+  f:  { start: '09:00', end: '18:00' },
+  ot: { start: '18:00', end: '22:00' },
+};
+
+// Mỗi ô lịch có thể là string ('m','a','f','ot') hoặc object { type, start, end }
+// Helper lấy type và giờ từ 1 ô
+function cellType(cell) { return cell && typeof cell === 'object' ? cell.type : (cell || null); }
+function cellStart(cell) {
+  if (!cell) return '';
+  if (typeof cell === 'object') return cell.start || DEFAULT_TIMES[cell.type]?.start || '';
+  return DEFAULT_TIMES[cell]?.start || '';
+}
+function cellEnd(cell) {
+  if (!cell) return '';
+  if (typeof cell === 'object') return cell.end || DEFAULT_TIMES[cell.type]?.end || '';
+  return DEFAULT_TIMES[cell]?.end || '';
+}
+
+// Nhãn hiển thị có giờ thực tế cho từng ô
+function shiftLabel(cell) {
+  const t = cellType(cell);
+  if (!t || t === 'off') return SL[t] || '';
+  const s = cellStart(cell), e = cellEnd(cell);
+  const name = SL[t] || t;
+  if (s && e) return `${name} <span class="pill-time">${s}–${e}</span>`;
+  return name;
+}
+function shiftLabelPlain(cell) {
+  const t = cellType(cell);
+  if (!t) return '';
+  const s = cellStart(cell), e = cellEnd(cell);
+  return (SL[t] || t) + (s && e ? ` ${s}–${e}` : '');
+}
+
+// --- STATE ---
+let employees    = [];
+let allSchedules = {}; // { "2026-W21": [[...],[...]], ... } — lưu tất cả các tuần
+let currentUser  = null;
+let weekOffset   = 0;
+let pendingShift = 'm';
+
+// Lấy key tuần hiện tại, ví dụ "2026-W21"
+function getWeekKey(offset) {
+  const dates = getWeekDatesByOffset(offset !== undefined ? offset : weekOffset);
+  const d = dates[0]; // Thứ 2 đầu tuần
+  const year = d.getFullYear();
+  // Tính số tuần ISO
+  const jan4 = new Date(year, 0, 4);
+  const startOfWeek1 = new Date(jan4);
+  startOfWeek1.setDate(jan4.getDate() - (jan4.getDay() || 7) + 1);
+  const weekNum = Math.floor((d - startOfWeek1) / (7 * 86400000)) + 1;
+  return year + '-W' + String(weekNum).padStart(2, '0');
+}
+
+// weekSchedule là alias cho tuần đang xem
+function getWeekSchedule() {
+  const key = getWeekKey();
+  if (!allSchedules[key]) allSchedules[key] = [];
+  const sched = allSchedules[key];
+  // Chỉ thêm hàng còn thiếu, không reset hàng đã có
+  while (sched.length < employees.length) sched.push(new Array(7).fill(null));
+  return sched;
+}
+
+// --- FIREBASE STATE ---
+let fbApp      = null;
+let fbDB       = null;
+let fbRef      = null;
+let online     = false;
+let dirty      = false;
+let lastRemote = '';
+let isSyncing  = false;
+
+// ==========================================
+// SYNC STATUS
+// ==========================================
+function setSync(state, label) {
+  const cls = state === 'ok' ? 'ok' : state === 'err' ? 'err' : 'spin';
+  ['syncDot','syncDotMob','syncDotLogin'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.className = 'sync-dot ' + cls;
+  });
+  ['syncLabel','syncLabelMob','syncLabelLogin'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = label;
+  });
+}
+
+// ==========================================
+// FIREBASE CONNECT
+// ==========================================
+function doConnectFirebase() {
+  const inp = document.getElementById('fbUrlInput');
+  connectFirebase(inp ? inp.value.trim() : '');
+}
+
+function connectFirebase(url) {
+  url = (url || FB_URL).replace(/\/$/, '');
+  const errEl = document.getElementById('setupErr');
+  if (!url || !url.startsWith('https://')) {
+    if (errEl) errEl.textContent = 'URL không hợp lệ.';
+    return;
+  }
+  if (errEl) errEl.textContent = '';
+  setSync('spin', 'Đang kết nối...');
+
+  // Cleanup app cũ
+  if (fbApp) {
+    try { fbApp.delete(); } catch(e) {}
+    fbApp = null; fbDB = null; fbRef = null;
+  }
+  online = false; isSyncing = false; lastRemote = '';
+
+  try {
+    // Firebase SDK v10 compat tự detect region từ databaseURL
+    const appName = 'thenob_' + Date.now();
+    fbApp = firebase.initializeApp({ databaseURL: url }, appName);
+    fbDB  = firebase.database(fbApp);
+    fbRef = fbDB.ref('thenob');
+  } catch(e) {
+    setSync('err', 'Lỗi khởi tạo');
+    if (errEl) errEl.textContent = 'Lỗi: ' + e.message;
+    return;
+  }
+
+  const timer = setTimeout(() => {
+    if (!online) {
+      setSync('err', 'Hết thời gian');
+      if (errEl) errEl.textContent = 'Không kết nối được. Kiểm tra URL và Rules Firebase.';
+    }
+  }, 12000);
+
+  // Lắng nghe realtime
+  fbRef.on('value', snap => {
+    clearTimeout(timer);
+    if (!online) {
+      online = true;
+      try { localStorage.setItem(FB_URL_KEY, url); } catch(e) {}
+      const ss = document.getElementById('setupScreen');
+      if (ss && ss.style.display !== 'none') ss.style.display = 'none';
+    }
+
+    const data = snap.val();
+    if (data && data.employees) {
+      const incoming = JSON.stringify({ employees: data.employees, allSchedules: data.allSchedules || {} });
+      if (incoming !== lastRemote) {
+        lastRemote   = incoming;
+        employees    = data.employees;
+        allSchedules = data.allSchedules || {};
+        saveLocal();
+        populateLoginEmpSel();
+        if (currentUser) refreshAll();
+      }
+    } else if (!isSyncing) {
+      pushToFirebase();
+    }
+    setSync('ok', 'Đã đồng bộ');
+
+  }, err => {
+    clearTimeout(timer);
+    online = false;
+    setSync('err', 'Lỗi: ' + err.code);
+    if (errEl) errEl.textContent = 'Lỗi: ' + err.message;
+  });
+
+  fbDB.ref('.info/connected').on('value', snap => {
+    if (snap.val() === true) {
+      online = true;
+      setSync('ok', 'Đã đồng bộ');
+      if (dirty) { dirty = false; pushToFirebase(); }
+    } else if (fbApp) {
+      online = false;
+      setSync('err', 'Mất mạng');
+    }
+  });
+}
+
+function pushToFirebase() {
+  if (!fbRef) return;
+  if (!online) { dirty = true; return; }
+  if (isSyncing) return;
+  isSyncing = true;
+  setSync('spin', 'Đang lưu...');
+  const payload = { employees, allSchedules };
+  fbRef.set(payload)
+    .then(() => {
+      lastRemote = JSON.stringify(payload);
+      isSyncing = false;
+      setSync('ok', 'Đã đồng bộ');
+    })
+    .catch(e => {
+      isSyncing = false;
+      dirty = true;
+      setSync('err', 'Lưu thất bại');
+    });
+}
+
+function skipSync() {
+  document.getElementById('setupScreen').style.display = 'none';
+  setSync('ok', 'Cục bộ');
+}
+
+function openSetup() {
+  const ss  = document.getElementById('setupScreen');
+  const inp = document.getElementById('fbUrlInput');
+  if (inp) {
+    const saved = (() => { try { return localStorage.getItem(FB_URL_KEY) || ''; } catch(e) { return ''; } })();
+    inp.value = saved || FB_URL;
+  }
+  if (ss) ss.style.display = 'flex';
+}
+
+// ==========================================
+// LOCAL STORAGE
+// ==========================================
+function saveLocal() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ employees, allSchedules })); } catch(e) {}
+}
+function loadLocal() {
+  try {
+    const d = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+    if (d && d.employees) {
+      employees    = d.employees;
+      allSchedules = d.allSchedules || {};
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+function saveData() {
+  saveLocal();
+  pushToFirebase();
+}
+
+// ==========================================
+// AUTH
+// ==========================================
+function switchTab(tab) {
+  const isEmp = tab === 'employee';
+  document.getElementById('panelEmp').style.display = isEmp ? 'block' : 'none';
+  document.getElementById('panelAdm').style.display = isEmp ? 'none' : 'block';
+  document.getElementById('loginErr').textContent   = '';
+  document.getElementById('tabEmp').className = 'ltab ' + (isEmp ? 'emp-on' : '');
+  document.getElementById('tabAdm').className = 'ltab ' + (isEmp ? '' : 'adm-on');
+  if (!isEmp) setTimeout(() => document.getElementById('loginPass').focus(), 50);
+}
+
+function populateLoginEmpSel() {
+  const sel = document.getElementById('loginEmpSel');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">-- Chọn tên của bạn --</option>' +
+    employees.map((e, i) => `<option value="${i}">${e.name}</option>`).join('');
+}
+
+function initials(name) {
+  return (name || '?').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+}
+
+function doLoginEmp() {
+  const idx = document.getElementById('loginEmpSel').value;
+  if (idx === '') { document.getElementById('loginErr').textContent = 'Vui lòng chọn tên'; return; }
+  const emp = employees[+idx];
+  currentUser = { role: 'employee', name: emp.name, color: emp.color || 'green', empIdx: +idx };
+  enterApp();
+}
+
+function doLoginAdmin() {
+  const p = document.getElementById('loginPass').value;
+  if (p === ADMIN_PASS) {
+    currentUser = { role: 'admin', name: 'Quản lý', color: 'purple', empIdx: -1 };
+    enterApp();
+  } else {
+    document.getElementById('loginErr').textContent = 'Mật khẩu không đúng';
+    document.getElementById('loginPass').value = '';
+  }
+}
+
+function enterApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appShell').style.display    = 'grid';
+  const admin = isAdmin();
+  const bg    = `var(--${currentUser.color}-bg)`;
+  const tx    = `var(--${currentUser.color})`;
+  const init  = initials(currentUser.name);
+  ['sbAvatar','mobAvatar'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.background = bg; el.style.color = tx; el.textContent = init; }
+  });
+  document.getElementById('sbName').textContent = currentUser.name;
+  document.getElementById('sbRole').textContent = admin ? 'Admin' : 'Nhân viên';
+  ['topAddShift','mobAddShift'].forEach(id => { const el=document.getElementById(id); if(el) el.style.display = ''; });
+  document.getElementById('topAddEmp').style.display = 'none';
+
+  // Hiện/ẩn tính năng chỉ dành cho Admin
+  ['sb-monthstats','mn-monthstats'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = admin ? '' : 'none';
+  });
+
+  if (admin) initMonthStatsSels();
+
+  refreshAll();
+  showView('schedule');
+}
+
+function doLogout() {
+  currentUser = null;
+  document.getElementById('appShell').style.display   = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  switchTab('employee');
+}
+
+function isAdmin() { return currentUser && currentUser.role === 'admin'; }
+
+// Kiểm tra tuần có bị khóa không (tuần đã qua + có dữ liệu)
+function isWeekLocked() {
+  if (weekOffset >= 0) return false; // tuần hiện tại hoặc tương lai: không khóa
+  const key = getWeekKey();
+  const sched = allSchedules[key];
+  if (!sched) return false;
+  // Kiểm tra có ít nhất 1 ca được điền
+  return sched.some(row => row && row.some(cell => cell && cellType(cell) !== 'off'));
+}
+
+// ==========================================
+// WEEK
+// ==========================================
+const TODAY = new Date();
+function getWeekDatesByOffset(off) {
+  const base = new Date(TODAY);
+  const dow  = base.getDay();
+  base.setDate(base.getDate() - (dow === 0 ? 6 : dow - 1) + off * 7);
+  return Array.from({ length: 7 }, (_, i) => { const d = new Date(base); d.setDate(base.getDate() + i); return d; });
+}
+function getWeekDates() { return getWeekDatesByOffset(weekOffset); }
+function fmt(d)    { return String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0'); }
+function isToday(d){ return d.toDateString() === TODAY.toDateString(); }
+function updateWeekLabel() {
+  const d = getWeekDates();
+  const l = fmt(d[0]) + ' – ' + fmt(d[6]);
+  const locked = isWeekLocked();
+  ['weekLabel','weekLabelMob'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = locked ? l + ' 🔒' : l; });
+  // Ẩn nút thêm ca khi tuần bị khoá
+  ['topAddShift','mobAddShift'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && currentUser) el.style.display = locked ? 'none' : '';
+  });
+}
+function changeWeek(dir) { weekOffset += dir; refreshAll(); }
+
+// ==========================================
+// BUILD SCHEDULE
+// ==========================================
+function buildSchedule() {
+  const admin = isAdmin();
+  const dates = getWeekDates();
+  const weekSched = getWeekSchedule();
+
+  // --- Desktop table ---
+  const table = document.getElementById('schedTable');
+  if (table) {
+    let h = '<thead><tr><th style="text-align:left;padding-left:4px;min-width:110px">Nhân viên</th>';
+    dates.forEach((d, i) => {
+      const t = isToday(d) && weekOffset === 0;
+      h += `<th class="${t ? 'today-h' : ''}">${DAYS[i]}<br><span style="font-family:'DM Mono',monospace;font-size:10px;font-weight:400">${fmt(d)}</span></th>`;
+    });
+    if (admin) h += '<th style="width:110px">Thao tác</th>';
+    h += '</tr></thead><tbody>';
+
+    if (employees.length === 0) {
+      h += `<tr><td colspan="${7 + (admin?2:1)}" style="text-align:center;padding:28px;color:var(--muted2)">
+        ${admin ? 'Chưa có nhân viên nào. Nhấn "+ Thêm NV" để bắt đầu.' : 'Chưa có nhân viên.'}
+      </td></tr>`;
+    }
+
+    employees.forEach((emp, ei) => {
+      const sched = weekSched[ei] || [];
+      const c = emp.color || 'green';
+      h += `<tr><td><div class="emp-name-cell">
+        <div class="avatar" style="width:26px;height:26px;font-size:10px;background:var(--${c}-bg);color:var(--${c})">${initials(emp.name)}</div>
+        <span style="font-size:12px;font-weight:500">${emp.name}</span>
+      </div></td>`;
+      dates.forEach((_, di) => {
+        const sh = sched[di];
+        const t = cellType(sh);
+        const canEdit = admin || (currentUser && currentUser.empIdx === ei);
+        if (t && t !== 'off') {
+          h += `<td><span class="shift-pill ${SC[t]||''}" ${canEdit ? `onclick="openEditShift(${ei},${di})" title="Nhấn để sửa"` : ''} style="${canEdit?'cursor:pointer':''}">${shiftLabel(sh)}</span></td>`;
+        } else {
+          h += `<td>${canEdit ? `<span class="add-cell" onclick="openEditShift(${ei},${di})" title="Thêm ca">+</span>` : '<span style="color:var(--muted2);font-size:11px">–</span>'}</td>`;
+        }
+      });
+      if (admin) h += `<td><div class="act-btns">
+        <button class="act-btn act-edit" onclick="openEditEmp(${ei})">Sửa</button>
+        <button class="act-btn act-del" onclick="confirmDelEmp(${ei})">Xoá</button>
+      </div></td>`;
+      h += '</tr>';
+    });
+    h += '</tbody>';
+    table.innerHTML = h;
+  }
+
+  // --- Mobile cards ---
+  const mob = document.getElementById('mobSched');
+  if (mob) {
+    mob.innerHTML = dates.map((d, di) => {
+      const t = isToday(d) && weekOffset === 0;
+      const rows = employees.map((emp, ei) => ({ emp, ei, sh: (weekSched[ei]||[])[di] }))
+                            .filter(x => cellType(x.sh) && cellType(x.sh) !== 'off');
+      return `<div class="mob-day">
+        <div class="mob-day-head ${t ? 'today' : ''}">
+          <span class="mob-day-name">${DAY_NAMES[di]}</span>
+          <span class="mob-day-date">${fmt(d)}</span>
+        </div>
+        <div class="mob-day-body">
+          ${rows.length === 0
+            ? '<div class="mob-empty">Không có ca</div>'
+            : rows.map(({ emp, ei, sh }) => {
+                const c = emp.color || 'green';
+                const canEdit = admin || (currentUser && currentUser.empIdx === ei);
+                return `<div class="mob-emp-row" ${canEdit ? `onclick="openEditShift(${ei},${di})"` : ''} style="${canEdit?'cursor:pointer':''}">
+                  <div class="avatar" style="width:26px;height:26px;font-size:10px;background:var(--${c}-bg);color:var(--${c})">${initials(emp.name)}</div>
+                  <span style="flex:1;font-size:12px;font-weight:500">${emp.name}</span>
+                  <span class="shift-pill ${SC[cellType(sh)]||''}">${shiftLabel(sh)}</span>
+                </div>`;
+              }).join('')}
+        </div>
+        ${admin ? `<div class="mob-add" onclick="openAddShiftDay(${di})">+ Thêm ca ngày này</div>` : ''}
+      </div>`;
+    }).join('');
+  }
+}
+
+// ==========================================
+// BUILD EMPLOYEE LIST
+// ==========================================
+function buildEmpList() {
+  const admin = isAdmin();
+  const el = document.getElementById('empList');
+  const addBtn = document.getElementById('cardAddEmp');
+  if (addBtn) addBtn.style.display = ''; // mọi user đều thấy nút thêm
+  if (!el) return;
+
+  if (employees.length === 0) {
+    el.innerHTML = `<div style="text-align:center;padding:20px;color:var(--muted2);font-size:12px">Chưa có nhân viên. Nhấn "+ Thêm".</div>`;
+    return;
+  }
+  el.innerHTML = employees.map((emp, i) => {
+    const c = emp.color || 'green';
+    return `<div class="emp-row">
+      <div class="avatar" style="background:var(--${c}-bg);color:var(--${c})">${initials(emp.name)}</div>
+      <div class="emp-row-info">
+        <div class="emp-row-name">${emp.name}</div>
+      </div>
+      <div class="act-btns">
+        <button class="act-btn act-edit" onclick="openEditEmp(${i})">Sửa</button>
+        ${admin ? `<button class="act-btn act-del" onclick="confirmDelEmp(${i})">Xoá</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ==========================================
+// VIEWS
+// ==========================================
+function showView(v) {
+  ['schedule','employees','monthstats'].forEach(id => {
+    const el = document.getElementById('view-' + id);
+    if (el) el.style.display = id === v ? 'block' : 'none';
+    const sb = document.getElementById('sb-' + id);
+    if (sb) sb.className = 'sb-item' + (id === v ? ' active' : '');
+    const mn = document.getElementById('mn-' + id);
+    if (mn) mn.className = 'mn-item' + (id === v ? ' active' : '');
+  });
+  const titles = { schedule: 'Lịch ca tuần', employees: 'Nhân viên', monthstats: 'Thống kê tháng' };
+  ['topTitle','mobTitle'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent = titles[v] || ''; });
+
+  // Topbar buttons
+  const topAddShift = document.getElementById('topAddShift');
+  const topAddEmp   = document.getElementById('topAddEmp');
+  if (topAddShift) topAddShift.style.display = v === 'schedule' ? '' : 'none';
+  if (topAddEmp)   topAddEmp.style.display   = isAdmin() && v === 'employees' ? '' : 'none';
+
+  if (v === 'schedule')   { updateWeekLabel(); buildSchedule(); }
+  if (v === 'employees')  buildEmpList();
+  if (v === 'monthstats') buildMonthStats();
+  checkLayout();
+}
+
+function refreshAll() {
+  updateWeekLabel();
+  buildSchedule();
+  buildEmpList();
+}
+
+// ==========================================
+// LAYOUT
+// ==========================================
+function checkLayout() {
+  const mob = window.innerWidth <= 900;
+  const sw  = document.getElementById('schedWrap');
+  const ms  = document.getElementById('mobSched');
+  const mwb = document.getElementById('mobWeekBar');
+  if (sw) sw.style.display  = mob ? 'none' : '';
+  if (ms) ms.style.display  = mob ? 'flex' : 'none';
+  if (mwb) mwb.style.display = mob ? 'flex' : 'none';
+}
+window.addEventListener('resize', checkLayout);
+
+// ==========================================
+// SHIFT MODAL
+// ==========================================
+function selShift(s, startVal, endVal) {
+  pendingShift = s;
+  ['m','a','f','ot','off'].forEach(t => {
+    const btn = document.getElementById('so-' + t);
+    if (btn) btn.className = 'sopt' + (t === s ? ' s-' + t : '');
+  });
+  // Hiện/ẩn panel tùy chỉnh giờ cho ca sáng/chiều
+  const panel = document.getElementById('timeInputPanel');
+  if (panel) {
+    if (s === 'm' || s === 'a') {
+      panel.style.display = 'block';
+      const def = DEFAULT_TIMES[s];
+      document.getElementById('timeStart').value = startVal || def.start;
+      document.getElementById('timeEnd').value   = endVal   || def.end;
+    } else {
+      panel.style.display = 'none';
+    }
+  }
+}
+
+function updateShiftTimePreview() {
+  // Không cần preview nữa vì giờ lưu per-cell
+}
+
+function openAddShift() {
+  if (isWeekLocked()) { showToast('⛔ Tuần này đã khoá, không thể sửa'); return; }
+  document.getElementById('shiftModalTitle').textContent = 'Thêm ca làm việc';
+  fillShiftEmpSel(-1, false);
+  document.getElementById('shiftDaySel').value = '0';
+  selShift('m');
+  openModal('shiftModal');
+}
+function openAddShiftDay(di) {
+  if (isWeekLocked()) { showToast('⛔ Tuần này đã khoá, không thể sửa'); return; }
+  document.getElementById('shiftModalTitle').textContent = 'Thêm ca — ' + DAY_NAMES[di];
+  fillShiftEmpSel(-1, false);
+  document.getElementById('shiftDaySel').value = di;
+  selShift('m');
+  openModal('shiftModal');
+}
+function openEditShift(ei, di) {
+  if (!isAdmin() && currentUser && currentUser.empIdx !== ei) return;
+  if (isWeekLocked()) { showToast('⛔ Tuần này đã khoá, không thể sửa'); return; }
+  const emp = employees[ei];
+  const cell = (getWeekSchedule()[ei] || [])[di] || 'm';
+  const t = cellType(cell) || 'm';
+  document.getElementById('shiftModalTitle').textContent = 'Sửa ca — ' + emp.name;
+  fillShiftEmpSel(ei, !isAdmin());
+  document.getElementById('shiftDaySel').value = di;
+  selShift(t, cellStart(cell), cellEnd(cell));
+  openModal('shiftModal');
+}
+function fillShiftEmpSel(sel, locked) {
+  const el = document.getElementById('shiftEmpSel');
+  if (!el) return;
+  el.innerHTML = employees.map((e, i) => `<option value="${i}" ${i === sel ? 'selected' : ''}>${e.name}</option>`).join('');
+  el.disabled = !!locked;
+  el.style.opacity = locked ? '0.6' : '';
+}
+function saveShift() {
+  const ei = +document.getElementById('shiftEmpSel').value;
+  const di = +document.getElementById('shiftDaySel').value;
+  const weekSched = getWeekSchedule();
+  if (!weekSched[ei]) weekSched[ei] = new Array(7).fill(null);
+
+  if (pendingShift === 'off') {
+    weekSched[ei][di] = null;
+  } else if (pendingShift === 'm' || pendingShift === 'a') {
+    const s = document.getElementById('timeStart').value || DEFAULT_TIMES[pendingShift].start;
+    const e = document.getElementById('timeEnd').value   || DEFAULT_TIMES[pendingShift].end;
+    weekSched[ei][di] = { type: pendingShift, start: s, end: e };
+  } else {
+    weekSched[ei][di] = pendingShift;
+  }
+
+  closeModal('shiftModal');
+  refreshAll();
+  saveData();
+  showToast('Đã lưu ca cho ' + employees[ei].name);
+}
+
+// ==========================================
+// EMPLOYEE MODAL
+// ==========================================
+function openAddEmp() {
+  if (!isAdmin()) return;
+  document.getElementById('empModalTitle').textContent = 'Thêm nhân viên';
+  document.getElementById('editEmpIdx').value = '-1';
+  document.getElementById('empName').value    = '';
+  openModal('empModal');
+  setTimeout(() => document.getElementById('empName').focus(), 220);
+}
+function openEditEmp(idx) {
+  const emp = employees[idx];
+  document.getElementById('empModalTitle').textContent = 'Sửa nhân viên';
+  document.getElementById('editEmpIdx').value = idx;
+  document.getElementById('empName').value    = emp.name;
+  openModal('empModal');
+}
+function saveEmployee() {
+  const idx   = +document.getElementById('editEmpIdx').value;
+  const name  = document.getElementById('empName').value.trim();
+  if (!name) { showToast('Vui lòng nhập tên'); return; }
+  if (idx === -1) {
+    const color = COLORS[employees.length % COLORS.length];
+    employees.push({ name, shift: 'm', color });
+    // Thêm hàng mới vào tất cả các tuần đã có
+    Object.keys(allSchedules).forEach(key => {
+      allSchedules[key].push(new Array(7).fill(null));
+    });
+    showToast('Đã thêm: ' + name);
+  } else {
+    employees[idx].name = name;
+    showToast('Đã cập nhật: ' + name);
+  }
+  closeModal('empModal');
+  populateLoginEmpSel();
+  refreshAll();
+  saveData();
+}
+function confirmDelEmp(idx) {
+  document.getElementById('confirmTitle').textContent = 'Xoá nhân viên?';
+  document.getElementById('confirmText').textContent  = `Sẽ xoá "${employees[idx].name}" và toàn bộ lịch ca của họ. Không thể hoàn tác.`;
+  document.getElementById('confirmOkBtn').onclick     = () => { delEmployee(idx); closeModal('confirmModal'); };
+  openModal('confirmModal');
+}
+function delEmployee(idx) {
+  employees.splice(idx, 1);
+  Object.keys(allSchedules).forEach(key => {
+    allSchedules[key].splice(idx, 1);
+  });
+  refreshAll();
+  populateLoginEmpSel();
+  saveData();
+  showToast('Đã xoá nhân viên');
+}
+
+// ==========================================
+// MODAL HELPERS
+// ==========================================
+function openModal(id)  { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('show'); });
+});
+
+// ==========================================
+// TOAST
+// ==========================================
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ==========================================
+// MONTHLY STATS (Admin only)
+// ==========================================
+function initMonthStatsSels() {
+  const mSel = document.getElementById('statMonthSel');
+  const ySel = document.getElementById('statYearSel');
+  if (!mSel || !ySel) return;
+  const monthNames = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
+                      'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
+  const now = new Date();
+  mSel.innerHTML = monthNames.map((m, i) =>
+    `<option value="${i}" ${i === now.getMonth() ? 'selected' : ''}>${m}</option>`
+  ).join('');
+  const curYear = now.getFullYear();
+  ySel.innerHTML = [curYear - 1, curYear, curYear + 1].map(y =>
+    `<option value="${y}" ${y === curYear ? 'selected' : ''}>${y}</option>`
+  ).join('');
+}
+
+function calcHours(cell) {
+  if (!cell || cellType(cell) === 'off') return 0;
+  const s = cellStart(cell), e = cellEnd(cell);
+  if (!s || !e) {
+    const def = DEFAULT_TIMES[cellType(cell)];
+    if (!def) return 0;
+    return calcHoursFromStr(def.start, def.end);
+  }
+  return calcHoursFromStr(s, e);
+}
+function calcHoursFromStr(s, e) {
+  const [sh, sm] = s.split(':').map(Number);
+  const [eh, em] = e.split(':').map(Number);
+  const diff = (eh * 60 + em) - (sh * 60 + sm);
+  return Math.max(0, Math.round(diff / 60 * 10) / 10);
+}
+
+// Tính số tuần ISO cho ngày bất kỳ
+function getISOWeekKey(date) {
+  const d = new Date(date);
+  const day = d.getDay() || 7;
+  d.setDate(d.getDate() + 4 - day);
+  const yearStart = new Date(d.getFullYear(), 0, 1);
+  const weekNum = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+  return d.getFullYear() + '-W' + String(weekNum).padStart(2, '0');
+}
+
+function buildMonthStats() {
+  if (!isAdmin()) return;
+  const month = +document.getElementById('statMonthSel').value;
+  const year  = +document.getElementById('statYearSel').value;
+
+  // Lấy tất cả ngày trong tháng
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const allDays = Array.from({ length: daysInMonth }, (_, i) => new Date(year, month, i + 1));
+
+  // Tổng hợp giờ theo nhân viên
+  const empStats = employees.map((emp, ei) => {
+    let totalH = 0, mH = 0, aH = 0, fH = 0, otH = 0;
+    let daysWorked = 0;
+    const dailyDetail = []; // { date, cell }
+
+    allDays.forEach(day => {
+      const weekKey = getISOWeekKey(day);
+      const sched = allSchedules[weekKey];
+      if (!sched || !sched[ei]) return;
+      const dow = day.getDay(); // 0=Sun ... 6=Sat
+      const di = dow === 0 ? 6 : dow - 1; // 0=Mon..6=Sun
+      const cell = sched[ei][di];
+      if (!cell || cellType(cell) === 'off') return;
+      const h = calcHours(cell);
+      if (h > 0) {
+        totalH += h;
+        daysWorked++;
+        const t = cellType(cell);
+        if (t === 'm')  mH  += h;
+        if (t === 'a')  aH  += h;
+        if (t === 'f')  fH  += h;
+        if (t === 'ot') otH += h;
+        dailyDetail.push({ date: day, cell });
+      }
+    });
+
+    return { emp, ei, totalH: Math.round(totalH * 10) / 10, mH, aH, fH, otH, daysWorked, dailyDetail };
+  });
+
+  // Summary tổng
+  const totalAllH   = empStats.reduce((s, e) => s + e.totalH, 0);
+  const totalDays   = empStats.reduce((s, e) => s + e.daysWorked, 0);
+  const sumEl = document.getElementById('statSummary');
+  if (sumEl) {
+    sumEl.innerHTML = `
+      <div class="stat-sum-item">
+        <div class="stat-sum-val">${Math.round(totalAllH * 10) / 10}</div>
+        <div class="stat-sum-label">Tổng giờ (tất cả NV)</div>
+      </div>
+      <div class="stat-sum-item">
+        <div class="stat-sum-val" style="color:var(--blue)">${employees.length}</div>
+        <div class="stat-sum-label">Nhân viên</div>
+      </div>
+      <div class="stat-sum-item">
+        <div class="stat-sum-val" style="color:var(--green)">${totalDays}</div>
+        <div class="stat-sum-label">Tổng ngày công</div>
+      </div>
+      <div class="stat-sum-item">
+        <div class="stat-sum-val" style="color:var(--warn)">${employees.length > 0 ? Math.round(totalAllH / employees.length * 10) / 10 : 0}</div>
+        <div class="stat-sum-label">Trung bình/người</div>
+      </div>`;
+  }
+
+  const grid = document.getElementById('statsGrid');
+  if (!grid) return;
+  if (employees.length === 0) {
+    grid.innerHTML = `<div class="stat-no-data">Chưa có nhân viên nào.</div>`;
+    return;
+  }
+
+  // Sort theo tổng giờ giảm dần
+  const sorted = [...empStats].sort((a, b) => b.totalH - a.totalH);
+
+  grid.innerHTML = sorted.map((s, rank) => {
+    const c = s.emp.color || 'green';
+    const fmtH = h => h > 0 ? `<span style="color:var(--text)">${h}h</span>` : `<span style="color:var(--muted2)">0h</span>`;
+    return `<div class="stat-emp-card">
+      <div class="stat-emp-head">
+        <div class="avatar" style="background:var(--${c}-bg);color:var(--${c})">${initials(s.emp.name)}</div>
+        <div class="stat-emp-name">
+          ${s.emp.name}
+          ${rank === 0 && s.totalH > 0 ? '<span style="margin-left:6px;font-size:11px">🏆</span>' : ''}
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-right:8px">${s.daysWorked} ngày</div>
+        <div class="stat-total-badge">${s.totalH}h</div>
+      </div>
+      <div class="stat-breakdown">
+        <div class="stat-item">
+          <div class="stat-item-val" style="color:var(--green)">${fmtH(Math.round(s.mH*10)/10)}</div>
+          <div class="stat-item-label">☀️ Ca sáng</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-item-val" style="color:var(--blue)">${fmtH(Math.round(s.aH*10)/10)}</div>
+          <div class="stat-item-label">🌇 Ca chiều</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-item-val" style="color:var(--purple)">${fmtH(Math.round(s.fH*10)/10)}</div>
+          <div class="stat-item-label">💼 Full-time</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-item-val" style="color:var(--red)">${fmtH(Math.round(s.otH*10)/10)}</div>
+          <div class="stat-item-label">🔴 Tăng ca</div>
+        </div>
+      </div>
+      ${s.dailyDetail.length > 0 ? `
+        <button class="stat-expand-btn" onclick="toggleStatDetail(this)">▾ Xem chi tiết ngày</button>
+        <div class="stat-emp-detail" style="display:none">
+          ${s.dailyDetail.map(({ date, cell }) => {
+            const t = cellType(cell);
+            const h = calcHours(cell);
+            const cls = SC[t] || '';
+            const dd = String(date.getDate()).padStart(2,'0');
+            const mm = String(date.getMonth()+1).padStart(2,'0');
+            const dow2 = ['CN','T2','T3','T4','T5','T6','T7'][date.getDay()];
+            return `<div class="stat-day-row">
+              <span style="font-family:'DM Mono',monospace;min-width:54px">${dow2} ${dd}/${mm}</span>
+              <span class="shift-pill ${cls}" style="pointer-events:none">${SL[t]||t}</span>
+              <span style="margin-left:auto;font-family:'DM Mono',monospace;color:var(--text);font-weight:600">${h}h</span>
+            </div>`;
+          }).join('')}
+        </div>` : `<div class="stat-no-data">Không có ca nào trong tháng này.</div>`}
+    </div>`;
+  }).join('');
+}
+
+function toggleStatDetail(btn) {
+  const detail = btn.nextElementSibling;
+  if (!detail) return;
+  const isHidden = detail.style.display === 'none';
+  detail.style.display = isHidden ? 'flex' : 'none';
+  detail.style.flexDirection = 'column';
+  btn.textContent = isHidden ? '▴ Ẩn chi tiết' : '▾ Xem chi tiết ngày';
+}
+
+// ==========================================
+// INIT
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+  // Load local data trước để UI không trống
+  const hasLocal = loadLocal();
+  if (!hasLocal) {
+    // Dữ liệu mẫu ban đầu
+    employees    = [
+      { name: 'Nguyễn Hoa',  color: 'green',  shift: 'm' },
+      { name: 'Trần Minh',   color: 'blue',   shift: 'f' },
+      { name: 'Lê Thu',      color: 'purple', shift: 'a' },
+    ];
+    weekSchedule = [
+      ['m','m','m','m','f',null,null],
+      ['f','f','f','f','f',null,null],
+      [null,'a','a','a','a','a',null],
+    ];
+  }
+  populateLoginEmpSel();
+  checkLayout();
+
+  document.getElementById('loginPass').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLoginAdmin();
+  });
+
+  // Kết nối Firebase
+  connectFirebase(FB_URL);
+});
+</script>
+</body>
+</html>
